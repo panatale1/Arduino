@@ -27,19 +27,40 @@
 /*******************************************************************************/
 /*macro definitions of PIR motion sensor pin and LED pin*/
 #define PIR_MOTION_SENSOR 2//Use pin 2 to receive the signal from the module 
-#define LED	13//the LED is connected to D4 of Arduino
-
+#define LED	5//the LED is connected to D1 of Arduino
+#include <SD.h>
+#define CS      10//ChipSelect is Pin 10 on SEEEDSTUDIO SD SHIELD
 void setup()
 {
 	pinsInit();
+  Serial.begin(9600);
+  Serial.println("Initializing card");
+  pinMode(CS, OUTPUT);
+  if (!SD.begin(CS)){
+    Serial.println("Card failed");
+    return;
+  }
+  Serial.println("Initialized");
 }
 
 void loop() 
 {
-	if(isPeopleDetected())//if the sensor detects movement, turn on LED.
+  File data = SD.open("data1.txt", FILE_WRITE);
+  if(data){
+	if(isPeopleDetected()){//if the sensor detects movement, turn on LED.
 		turnOnLED();
-	else//if the sensor does not detect movement, do not turn on LED.
+                Serial.println("HIGH");
+                data.println("HIGH");
+         }else{//if the sensor does not detect movement, do not turn on LED.
 		turnOffLED();
+                Serial.println("LOW");
+                data.println("LOW");
+        }
+        data.close();
+  }else{
+    Serial.println("Could not open file for writing");
+  }
+  delay(500);
 }
 void pinsInit()
 {
