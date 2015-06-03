@@ -1,0 +1,14 @@
+to connect Arduino TFT to Micro:
+
+TFT	Micro
+-------------
++5	+5
+MISO	MISO
+SCK	SCK
+MOSI	MOSI
+CS-LCD	10
+CS-SD	4
+DC	0
+RST	1
+BL	+5
+GND	GND
